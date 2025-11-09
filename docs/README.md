@@ -14,6 +14,7 @@ Este proyecto es un **Reproductor de Música MP3** implementado en **Java 21** c
 6. [**LOGICA_REPRODUCTOR.md**](./LOGICA_REPRODUCTOR.md) - Lógica del reproductor de audio
 7. [**BASE_DE_DATOS.md**](./BASE_DE_DATOS.md) - Configuración de la base de datos SQLite
 8. [**FLUJO_DE_EJECUCION.md**](./FLUJO_DE_EJECUCION.md) - Flujo de ejecución del programa
+9. [**COMPLEJIDAD_ALGORITMICA.md**](./COMPLEJIDAD_ALGORITMICA.md) - ⭐ Análisis Big O y algoritmos de ordenamiento
 
 ---
 
@@ -26,6 +27,7 @@ Este proyecto es un **reproductor de música MP3** desarrollado como práctica e
 - ✅ **Cola de reproducción** automática
 - ✅ **Historial de reproducción**
 - ✅ **Navegación** entre canciones (siguiente, anterior)
+- ✅ **Ordenamiento de canciones** por título (Bubble Sort) o artista (Insertion Sort)
 - ✅ **Interfaz gráfica moderna** con Swing y FlatLaf
 
 ---
@@ -138,6 +140,8 @@ CREATE TABLE canciones (
 - Tabla con todas las canciones
 - Búsqueda por título/artista
 - Botones: +Canción, Editar, -Canción, +Cola, ▶
+- **🔤 Ordenar por Título** (usa Bubble Sort)
+- **🎤 Ordenar por Artista** (usa Insertion Sort)
 - Funcionalidad "Reproducir Todo"
 
 #### 3️⃣ **Historial**
@@ -169,6 +173,8 @@ O desde tu IDE favorito ejecutando la clase `Main.java`
 - ✅ Editar información de canciones
 - ✅ Eliminar canciones
 - ✅ Buscar por título o artista
+- ✅ **Ordenar por título** usando **Bubble Sort** (O(n²))
+- ✅ **Ordenar por artista** usando **Insertion Sort** (O(n²))
 
 ### **Reproducción**
 - ✅ Reproducir archivos MP3 reales
@@ -192,8 +198,11 @@ O desde tu IDE favorito ejecutando la clase `Main.java`
 2. **Pila (LIFO)** - Historial con acceso al último elemento
 3. **Cola (FIFO)** - Reproducción ordenada de canciones
 4. **Nodos Genéricos** - Reutilización con tipos parametrizados
-5. **Patrón Repository** - Abstracción del acceso a datos
-6. **Patrón MVC** - Separación de responsabilidades
+5. **Búsqueda Lineal** - O(n) para buscar canciones por texto
+6. **Bubble Sort** - O(n²) para ordenar por título
+7. **Insertion Sort** - O(n²) para ordenar por artista
+8. **Patrón Repository** - Abstracción del acceso a datos
+9. **Patrón MVC** - Separación de responsabilidades
 
 ---
 

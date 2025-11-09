@@ -173,10 +173,95 @@ public class MiLista<T> {
     }
     
     /**
+     * Ordena la lista usando Bubble Sort (Ordenamiento de burbuja)
+     * Complejidad: O(n²)
+     * @param comparador Comparador para determinar el orden
+     */
+    public void ordenarBubbleSort(Comparador<T> comparador) {
+        if (tamanio <= 1) {
+            return;
+        }
+        
+        boolean huboIntercambio;
+        do {
+            huboIntercambio = false;
+            Nodo<T> actual = cabeza;
+            
+            for (int i = 0; i < tamanio - 1; i++) {
+                Nodo<T> siguiente = actual.getSiguiente();
+                
+                // Si el actual es mayor que el siguiente, intercambiar
+                if (comparador.comparar(actual.getDato(), siguiente.getDato()) > 0) {
+                    // Intercambiar los datos
+                    T temp = actual.getDato();
+                    actual.setDato(siguiente.getDato());
+                    siguiente.setDato(temp);
+                    huboIntercambio = true;
+                }
+                
+                actual = siguiente;
+            }
+        } while (huboIntercambio);
+    }
+    
+    /**
+     * Ordena la lista usando Insertion Sort (Ordenamiento por inserción)
+     * Complejidad: O(n²) en promedio, O(n) en el mejor caso (lista ya ordenada)
+     * @param comparador Comparador para determinar el orden
+     */
+    public void ordenarInsertionSort(Comparador<T> comparador) {
+        if (tamanio <= 1) {
+            return;
+        }
+        
+        // Crear array temporal para facilitar el ordenamiento
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) new Object[tamanio];
+        
+        // Copiar elementos al array
+        Nodo<T> actual = cabeza;
+        for (int i = 0; i < tamanio; i++) {
+            elementos[i] = actual.getDato();
+            actual = actual.getSiguiente();
+        }
+        
+        // Insertion Sort en el array
+        for (int i = 1; i < tamanio; i++) {
+            T clave = elementos[i];
+            int j = i - 1;
+            
+            while (j >= 0 && comparador.comparar(elementos[j], clave) > 0) {
+                elementos[j + 1] = elementos[j];
+                j--;
+            }
+            elementos[j + 1] = clave;
+        }
+        
+        // Copiar elementos ordenados de vuelta a la lista
+        actual = cabeza;
+        for (int i = 0; i < tamanio; i++) {
+            actual.setDato(elementos[i]);
+            actual = actual.getSiguiente();
+        }
+    }
+    
+    /**
      * Interfaz funcional para recorrer la lista
      */
     @FunctionalInterface
     public interface AccionLista<T> {
         void ejecutar(T dato, int indice);
+    }
+    
+    /**
+     * Interfaz funcional para comparar elementos
+     */
+    @FunctionalInterface
+    public interface Comparador<T> {
+        /**
+         * Compara dos elementos
+         * @return negativo si a < b, 0 si a == b, positivo si a > b
+         */
+        int comparar(T a, T b);
     }
 }

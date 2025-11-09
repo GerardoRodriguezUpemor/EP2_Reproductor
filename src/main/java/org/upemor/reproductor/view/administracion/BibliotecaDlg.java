@@ -17,6 +17,8 @@ public class BibliotecaDlg extends BaseDlg {
     private Reproductor reproductor;
     private JButton btnAgregarACola;
     private JButton btnReproducirTodo;
+    private JButton btnOrdenarTitulo;
+    private JButton btnOrdenarArtista;
     private MiLista<Cancion> cancionesActuales; // Lista de canciones mostradas
     
     public BibliotecaDlg(Reproductor reproductor) {
@@ -56,17 +58,17 @@ public class BibliotecaDlg extends BaseDlg {
         btnEditar.setText("✏️ Editar");
         btnEliminar.setText("-Canción");
         
-        // Agregar botón adicional
-        agregarBotonCola();
+        // Agregar botones adicionales
+        agregarBotonesExtras();
         
         // Cargar datos iniciales
         eventoBotonBuscar();
     }
     
     /**
-     * Agrega botón para agregar a cola de reproducción
+     * Agrega botones extras: cola, reproducción y ordenamiento
      */
-    private void agregarBotonCola() {
+    private void agregarBotonesExtras() {
         JPanel panelBotones = (JPanel) getComponent(2); // Panel inferior
         
         // Cambiar el layout a BorderLayout para separar botones
@@ -78,6 +80,18 @@ public class BibliotecaDlg extends BaseDlg {
         panelIzquierdo.add(btnAgregar);
         panelIzquierdo.add(btnEditar);
         panelIzquierdo.add(btnEliminar);
+        
+        // Panel central con botones de ordenamiento
+        JPanel panelCentro = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        
+        btnOrdenarTitulo = crearBoton("🔤 Ordenar por Título", new Color(3, 169, 244));
+        btnOrdenarTitulo.addActionListener(e -> ordenarPorTitulo());
+        
+        btnOrdenarArtista = crearBoton("🎤 Ordenar por Artista", new Color(255, 152, 0));
+        btnOrdenarArtista.addActionListener(e -> ordenarPorArtista());
+        
+        panelCentro.add(btnOrdenarTitulo);
+        panelCentro.add(btnOrdenarArtista);
         
         // Panel derecho con botones de reproducción
         JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
@@ -94,6 +108,7 @@ public class BibliotecaDlg extends BaseDlg {
         // Limpiar panel y agregar los nuevos sub-paneles
         panelBotones.removeAll();
         panelBotones.add(panelIzquierdo, BorderLayout.WEST);
+        panelBotones.add(panelCentro, BorderLayout.CENTER);
         panelBotones.add(panelDerecho, BorderLayout.EAST);
     }
     
@@ -269,6 +284,87 @@ public class BibliotecaDlg extends BaseDlg {
             JOptionPane.showMessageDialog(this,
                 "Error al reproducir canciones: " + e.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Ordena las canciones actuales por título usando Bubble Sort
+     */
+    private void ordenarPorTitulo() {
+        try {
+            if (cancionesActuales == null || cancionesActuales.tamanio() == 0) {
+                JOptionPane.showMessageDialog(this,
+                    "No hay canciones para ordenar",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Ordenar usando Bubble Sort
+            cancionesActuales.ordenarBubbleSort((c1, c2) -> 
+                c1.getTitulo().compareToIgnoreCase(c2.getTitulo())
+            );
+            
+            // Actualizar tabla
+            actualizarTabla();
+            
+            JOptionPane.showMessageDialog(this,
+                "Canciones ordenadas por título (Bubble Sort)",
+                "Ordenamiento Exitoso", JOptionPane.INFORMATION_MESSAGE);
+                
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al ordenar: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Ordena las canciones actuales por artista usando Insertion Sort
+     */
+    private void ordenarPorArtista() {
+        try {
+            if (cancionesActuales == null || cancionesActuales.tamanio() == 0) {
+                JOptionPane.showMessageDialog(this,
+                    "No hay canciones para ordenar",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Ordenar usando Insertion Sort
+            cancionesActuales.ordenarInsertionSort((c1, c2) -> 
+                c1.getArtista().compareToIgnoreCase(c2.getArtista())
+            );
+            
+            // Actualizar tabla
+            actualizarTabla();
+            
+            JOptionPane.showMessageDialog(this,
+                "Canciones ordenadas por artista (Insertion Sort)",
+                "Ordenamiento Exitoso", JOptionPane.INFORMATION_MESSAGE);
+                
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al ordenar: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Actualiza la tabla con las canciones actuales
+     */
+    private void actualizarTabla() {
+        limpiarTabla();
+        
+        for (int i = 0; i < cancionesActuales.tamanio(); i++) {
+            Cancion cancion = cancionesActuales.obtener(i);
+            Object[] fila = {
+                cancion.getId(),
+                cancion.getTitulo(),
+                cancion.getArtista(),
+                cancion.getAlbum() != null ? cancion.getAlbum() : "N/A",
+                cancion.getDuracionFormateada()
+            };
+            modeloTabla.addRow(fila);
         }
     }
 }
